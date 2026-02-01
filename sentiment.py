@@ -8,7 +8,7 @@ def analyze_sentiment(input):
     if result[0]['score'] < 0.6 :
         return{"label":"neutral","score":result[0]['score']}
     return result[0]
-
+'''
 test_texts = [
     "I'm so excited about this new opportunity!",
     "This is absolutely terrifying.",
@@ -19,5 +19,5 @@ test_texts = [
 for text in test_texts:
     print(f"Text: {text}")
     print(f"Emotion: {analyze_sentiment(text)}\n")
-  
 
+'''
