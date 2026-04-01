@@ -2,7 +2,7 @@
 from rag.loader import load_file
 from rag.chunker import chunk_text
 from rag.embedder import embed_and_store
-from rag.retriver import query
+from rag.retriever import query
 
 def ingest(file_path: str):
     print(f"Loading {file_path}...")
@@ -23,7 +23,7 @@ def ask(question: str):
 
 if __name__ == "__main__":
     # Step 1: ingest a document
-    ingest("sample.pdf")  # swap with your file
+    ingest("sample.txt")  # swap with your file
     
     # Step 2: ask questions
     ask("What is this document about?")
