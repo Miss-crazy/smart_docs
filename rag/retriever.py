@@ -31,8 +31,9 @@ def query(question: str, collection_name: str = "smart_doc", top_k: int = 3) -> 
     
     # ask Ollama
     response = ollama.chat(
-        model="llama3.2",
+        model="phi3:mini",
         messages=[{"role": "user", "content": prompt}]
     )
-    
+    #unload model from ram after generating response to free up resources
+    ollama.generate(model="phi3:mini" , prompt="" , keep_alive=0) 
     return response["message"]["content"]

@@ -17,5 +17,9 @@ def embed_and_store(chunks : list[str] , collection_name : str ="smart_docs"):
             embeddings = [embedding] ,
             documents = [chunk]
         )
+        if i%10 ==0:
+            print(f"  → {i}/{len(chunks)} chunks embedded")
+    #unload model from ram after embedding to free up resources
+    ollama.generate(model="nomic-embed-text" , prompt="" , keep_alive=0)
     
     print(f"stored {len(chunks)} chunks in collection '{collection_name}'")
