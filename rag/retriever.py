@@ -4,7 +4,7 @@ import chromadb
 
 client = chromadb.PersistentClient(path="./chroma_db")
 
-def query(question: str, collection_name: str = "smart_doc", top_k: int = 3) -> str:
+def query(question: str, collection_name: str = "smart_docs", top_k: int = 3) -> str:
     collection = client.get_or_create_collection(name=collection_name)
     
     # embed the question
@@ -36,4 +36,5 @@ def query(question: str, collection_name: str = "smart_doc", top_k: int = 3) -> 
     )
     #unload model from ram after generating response to free up resources
     ollama.generate(model="phi3:mini" , prompt="" , keep_alive=0) 
+    
     return response["message"]["content"]
