@@ -1,4 +1,7 @@
-# main.py
+import os
+os.environ["OLLAMA_NUM_PARALLEL"]="1"
+os.environ["OLLAMA_MAX_LOADED_MODELS"]="1"
+
 from rag.loader import load_file
 from rag.chunker import chunk_text
 from rag.embedder import embed_and_store
@@ -26,5 +29,5 @@ if __name__ == "__main__":
     ingest("sample.txt")  # swap with your file
     
     # Step 2: ask questions
-    ask("What is this document about?")
-    ask("Summarize the key points.")
+    ask("What is this document about in one line?")
+    ask("What is the capital of France?")
