@@ -5,10 +5,28 @@ from rag.retriever import query
 from rag.loader import load_file
 from rag.chunker import chunk_text
 from rag.embedder import embed_and_store
+from sentiment import analyze_sentiment
 import os
 import tempfile
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class SentimentRequest(BaseModel):
+    text: str
+
+@app.post("/sentiment/")
+def sentiment(request: SentimentRequest):
+    result = analyze_sentiment(request.text)
+    return result
 class QuestionRequest(BaseModel):
     question:str
 
