@@ -5,29 +5,35 @@ os.environ["OLLAMA_MAX_LOADED_MODELS"]="1"
 from rag.loader import load_file
 from rag.chunker import chunk_text
 from rag.embedder import embed_and_store
-from rag.retriever import query
+from rag.summarization.chunk_summary import map_reduce_summary
+
+LARGE_FILE_THRESHOLD_BYTES = 2 * 1024 * 1024  # 2 MB, adjust as needed
 
 def ingest(file_path: str):
     print(f"Loading {file_path}...")
     text = load_file(file_path)
-    
-    print("Chunking text...")
-    chunks = chunk_text(text)
-    
-    print("Embedding and storing in ChromaDB...")
-    embed_and_store(chunks)
+
+    file_size = os.path.getsize(file_path)
+    is_large = file_size >= LARGE_FILE_THRESHOLD_BYTES
+
+    if is_large:
+        print("Large file detected. Running map-reduce summarization...")
+        chunks = chunk_text(text, chunk_size=1200, overlap=100)
+        map_summaries, final_summary = map_reduce_summary(chunks)
+
+        print("Embedding summarized chunks...")
+        embed_and_store(map_summaries, collection_name="smart_docs")
+
+        print("Embedding final reduced summary...")
+        embed_and_store([final_summary], collection_name="smart_docs_summary")
+    else:
+        print("Small file detected. Using normal chunking...")
+        chunks = chunk_text(text)
+        embed_and_store(chunks, collection_name="smart_docs")
     
     print("Document ready for questions!")
 
-def ask(question: str):
-    print(f"\n Question: {question}")
-    answer = query(question)
-    print(f" Answer: {answer}\n")
 
-if __name__ == "__main__":
-    # Step 1: ingest a document
-    ingest("sample.txt")  # swap with your file
-    
-    # Step 2: ask questions
-    ask("What is this document about in one line?")
-    ask("What is the capital of France?")
+
+
+
