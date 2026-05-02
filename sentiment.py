@@ -1,6 +1,6 @@
 from transformers import pipeline 
 
-pipe = pipeline("sentiment-analysis",  model="j-hartmann/emotion-english-distilroberta-base")
+pipe = pipeline("sentiment-analysis",  model="cardiffnlp/twitter-roberta-base-sentiment-latest")
 
 def analyze_sentiment(input):
     result = pipe(input)
