@@ -62,7 +62,7 @@ An AI-powered document interaction system that runs **fully locally** — no API
 
 
 ---
-##Work Flow
+## Work Flow
 <img width="1336" height="1218" alt="image" src="https://github.com/user-attachments/assets/5fd095db-520e-4612-a2cd-1401cce05254" />
 
 ## Getting started
