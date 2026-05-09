@@ -21,21 +21,8 @@ documents and ask questions, get summaries, and analyse sentiment
 | File support | PDF (PyMuPDF), plain text |
 
 ## Architecture
-[paste the diagram screenshot here]
+<img width="1440" height="1432" alt="image" src="https://github.com/user-attachments/assets/e7622ebd-ebc8-490a-952f-d379dfe3fa5e" />
 
-## Project Structure
-smart_docs/
-├── rag/
-│   ├── loader.py       # extract text from PDF/txt
-│   ├── chunker.py      # split into overlapping chunks
-│   ├── embedder.py     # embed + store in ChromaDB
-│   └── retriever.py    # query + generate grounded answer
-|   ├── summarization/
-|      ├── chunk_summary.py       # Map-reduce in case of larger documents
-├── api.py              # FastAPI endpoints
-├── sentiment.py        # emotion classification
-└── index.html          # frontend UI
-└── chroma_db           # Vector Database
 
 ## Getting Started
 
