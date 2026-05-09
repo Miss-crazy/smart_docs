@@ -1,4 +1,4 @@
-# SmartDoc 📄
+# SmartDocs
 
 An AI-powered document interaction system that runs **fully locally** — no API costs, no cloud dependencies. Upload a document and interact with it through RAG-powered Q&A, sentiment analysis, and summarization.
 
@@ -16,7 +16,13 @@ An AI-powered document interaction system that runs **fully locally** — no API
 
 ## Demo
 
-> Add your UI screenshots here
+<img width="1909" height="937" alt="image" src="https://github.com/user-attachments/assets/16a64736-bbe0-4caa-a988-539905e466ce" />
+<img width="309" height="641" alt="image" src="https://github.com/user-attachments/assets/7d610684-4b1e-4815-98d3-ffb82e42db5c" />
+<img width="1619" height="527" alt="image" src="https://github.com/user-attachments/assets/000f1aec-dfa1-467f-9a34-58efb59ef670" />
+<img width="1892" height="558" alt="image" src="https://github.com/user-attachments/assets/6385db61-03a9-4c44-aef5-fab2b923e709" />
+<img width="1583" height="383" alt="image" src="https://github.com/user-attachments/assets/ba3f05a6-ed75-49d7-b60f-db5378a7ae1c" />
+<img width="1594" height="388" alt="image" src="https://github.com/user-attachments/assets/6b1cea66-c59f-46be-84a9-dad0244af4ce" />
+
 
 ---
 
