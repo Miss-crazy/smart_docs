@@ -1,60 +1,164 @@
 # SmartDoc 📄
 
-An AI-powered document interaction system that lets you upload 
-documents and ask questions, get summaries, and analyse sentiment 
-— all running 100% locally with no API costs.
+An AI-powered document interaction system that runs **fully locally** — no API costs, no cloud dependencies. Upload a document and interact with it through RAG-powered Q&A, sentiment analysis, and summarization.
+
+---
 
 ## Features
-- Ask questions about uploaded documents (RAG pipeline)
-- Grounded answers — refuses to hallucinate outside document context
-- Emotion/sentiment analysis on any text
-- Fully local — no OpenAI key, no cloud costs
 
-## Tech Stack
-| Layer | Tool |
-|---|---|
-| API | FastAPI + Uvicorn |
-| LLM | phi3:mini via Ollama |
-| Embeddings | nomic-embed-text via Ollama |
-| Vector DB | ChromaDB |
-| Sentiment model | j-hartmann/emotion-english-distilroberta-base |
-| File support | PDF (PyMuPDF), plain text |
+- **Ask questions** — retrieval-augmented generation (RAG) grounds every answer strictly in your document. No hallucinations.
+- **Sentiment analysis** — emotion detection on any text using a fine-tuned transformer model.
+- **Summarization** — query-focused summarization for small documents; map-reduce for files larger than 2MB.
+- **REST API** — FastAPI backend with endpoints for file ingestion and querying.
+- **Clean UI** — minimal dark frontend, no framework dependencies.
 
-## Architecture
-<img width="1440" height="1432" alt="image" src="https://github.com/user-attachments/assets/e7622ebd-ebc8-490a-952f-d379dfe3fa5e" />
+---
 
+## Demo
 
-## Getting Started
+> Add your UI screenshots here
 
-### Prerequisites
-- Python 3.10+
-- [Ollama](https://ollama.com/download) installed
-
-### Installation
-git clone https://github.com/your-username/smart_docs
-cd smart_docs
-pip install -r requirements.txt
-ollama pull phi3:mini
-ollama pull nomic-embed-text
-
-### Run
-ollama serve          # terminal 1
-uvicorn api:app --reload  # terminal 2
-# open index.html in browser
+---
 
 ## How it works
-1. Upload a PDF or txt file via the UI
-2. The file is chunked into 200-word overlapping segments
-3. Each chunk is embedded using nomic-embed-text and stored in ChromaDB
-4. When you ask a question, it's embedded and matched against stored chunks
-5. Top 3 matching chunks are passed as context to phi3:mini
-6. The LLM answers strictly from context — preventing hallucinations
 
-## Screenshots
-[upload your UI screenshots here]
+### Ingestion phase
+1. User uploads a `.pdf` or `.txt` file via the API
+2. Text is extracted from the file
+3. Text is split into overlapping 200-word chunks
+4. Each chunk is converted to a vector embedding using `nomic-embed-text`
+5. Embeddings are stored persistently in ChromaDB
 
-## Resources
-- [FastAPI docs](https://fastapi.tiangolo.com)
-- [Ollama](https://ollama.com)
+### Query phase
+1. User submits a question
+2. Question is embedded using the same model
+3. ChromaDB performs cosine similarity search and returns the top 3 most relevant chunks
+4. A grounded prompt is built: `answer ONLY from the context below`
+5. `phi3:mini` generates an answer strictly from retrieved context
+
+### Summarization
+- Files **under 2MB** — query-focused summarization: top 8–10 chunks are retrieved and summarized in one pass
+- Files **over 2MB** — map-reduce: each chunk is summarized individually, then summaries are combined into a final summary
+
+---
+
+## Tech stack
+
+| Layer | Tool |
+|---|---|
+| LLM | `phi3:mini` via Ollama (local) |
+| Embeddings | `nomic-embed-text` via Ollama |
+| Vector store | ChromaDB (persistent, local) |
+| API | FastAPI + Uvicorn |
+| Sentiment model | `cardiffnlp/twitter-roberta-base-sentiment-latest` |
+| PDF parsing | PyMuPDF (fitz) |
+| Language | Python 3.11+ |
+
+
+---
+##Work Flow
+<img width="1336" height="1218" alt="image" src="https://github.com/user-attachments/assets/5fd095db-520e-4612-a2cd-1401cce05254" />
+
+## Getting started
+
+### Prerequisites
+- Python 3.11+
+- [Ollama](https://ollama.com/download) installed and running
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/your-username/smart_docs.git
+cd smart_docs
+```
+
+### 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Pull Ollama models
+```bash
+ollama pull phi3:mini
+ollama pull nomic-embed-text
+```
+
+### 4. Start Ollama
+```bash
+ollama serve
+```
+
+### 5. Start the API
+```bash
+uvicorn api:app --reload
+```
+
+### 6. Open the UI
+Open `index.html` in your browser. The status indicator will turn green when the API is online.
+
+---
+
+## API endpoints
+
+### `POST /uploadfile/`
+Upload and ingest a document.
+
+**Request:** multipart/form-data with a `.pdf` or `.txt` file
+
+**Response:**
+```json
+{ "message": "Document ready for questions!" }
+```
+
+---
+
+### `POST /userquery/`
+Ask a question about the ingested document.
+
+**Request:**
+```json
+{ "question": "What is this document about?" }
+```
+
+**Response:**
+```json
+{ "answer": "..." }
+```
+
+---
+
+### `POST /sentiment/`
+Analyse the emotional tone of any text.
+
+**Request:**
+```json
+{ "text": "I'm so excited about this!" }
+```
+
+**Response:**
+```json
+{ "label": "joy", "score": 0.94 }
+```
+
+---
+
+## Further reading
+
+- [RAG — Retrieval Augmented Generation](https://medium.com/@tejpal.abhyuday/retrieval-augmented-generation-rag-from-basics-to-advanced-a2b068fd576c)
 - [ChromaDB docs](https://docs.trychroma.com)
-- [RAG explained](https://medium.com/@tejpal.abhyuday/retrieval-augmented-generation-rag-from-basics-to-advanced-a2b068fd576c)
+- [FastAPI docs](https://fastapi.tiangolo.com)
+- [Ollama model library](https://ollama.com/library)
+
+---
+
+## Hardware notes
+
+Built and tested on 16GB RAM with an NVIDIA GPU. Designed to run comfortably on consumer hardware:
+- Models are unloaded from RAM immediately after use (`keep_alive=0`)
+- Ollama is configured to load only one model at a time
+- Chunk size is tuned to 200 words to avoid memory spikes during embedding
+
+---
+
+## License
+
+MIT
