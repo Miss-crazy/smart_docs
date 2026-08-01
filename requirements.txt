@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+chromadb
+ollama
+pymupdf
+transformers
+torch
+pydantic
+python-multipart
