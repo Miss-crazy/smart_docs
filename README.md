@@ -228,12 +228,12 @@ SmartDocs is optimized to run smoothly on standard consumer laptops and PCs (tes
 
 ## 🔮 Future Roadmap & Potential Features
 
-- [ ] **Hybrid Search (BM25 + Dense Vectors)**: Combine sparse lexical keyword matching with dense vector search using Reciprocal Rank Fusion (RRF).
-- [ ] **Document Page Highlighting & Citations**: Return precise page numbers and highlighted bounding boxes for PDF documents.
-- [ ] **Streaming Responses (SSE / WebSockets)**: Enable real-time token streaming in the UI for instant feedback.
-- [ ] **Multi-Document Comparison**: Query across multiple indexed files simultaneously with document filter pills.
-- [ ] **OCR Support for Scanned Documents**: Integrate Tesseract or Suriya OCR for image-based PDFs.
-- [ ] **Chat History Export**: Download chat transcripts as Markdown or PDF summaries.
+-  **Hybrid Search (BM25 + Dense Vectors)**: Combine sparse lexical keyword matching with dense vector search using Reciprocal Rank Fusion (RRF).
+-  **Document Page Highlighting & Citations**: Return precise page numbers and highlighted bounding boxes for PDF documents.
+-  **Streaming Responses (SSE / WebSockets)**: Enable real-time token streaming in the UI for instant feedback.
+-  **Multi-Document Comparison**: Query across multiple indexed files simultaneously with document filter pills.
+-  **OCR Support for Scanned Documents**: Integrate Tesseract or Suriya OCR for image-based PDFs.
+-  **Chat History Export**: Download chat transcripts as Markdown or PDF summaries.
 
 ---
 
