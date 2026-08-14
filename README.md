@@ -1,4 +1,4 @@
-# ◈ SmartDocs — Local Conversational RAG & Document Intelligence
+# SmartDocs - Local Conversational RAG & Document Intelligence
 
 SmartDocs is a privacy-first, fully local Document Interaction & Retrieval-Augmented Generation (RAG) system. It allows users to upload documents (`.pdf`, `.txt`) and chat with them using local Large Language Models and embedding models — **zero cloud API costs, zero external data sharing, and 100% data privacy**.
 
@@ -18,11 +18,6 @@ The SmartDocs RAG pipeline was evaluated using **RAGAS** (Retrieval Augmented Ge
 | **Context Precision** | **74.2%** | Measures the density of relevant context across top-$k$ retrieved chunks. |
 | **🏆 Overall RAGAS Score** | **92.3%** | **High-precision, robust local RAG pipeline.** |
 
-> [!NOTE]
-> You can re-run the benchmark suite locally at any time:
-> ```bash
-> python evaluate_rag.py
-> ```
 
 ---
 
@@ -52,11 +47,6 @@ The SmartDocs RAG pipeline was evaluated using **RAGAS** (Retrieval Augmented Ge
 ### Grounded Document Answers
 <img width="1619" height="527" alt="Grounded RAG Response" src="https://github.com/user-attachments/assets/000f1aec-dfa1-467f-9a34-58efb59ef670" />
 
-<img width="1892" height="558" alt="Multi-Turn Q&A" src="https://github.com/user-attachments/assets/6385db61-03a9-4c44-aef5-fab2b923e709" />
-
-<img width="1583" height="383" alt="Context-Aware Responses" src="https://github.com/user-attachments/assets/ba3f05a6-ed75-49d7-b60f-db5378a7ae1c" />
-
-<img width="1594" height="388" alt="Document Insights" src="https://github.com/user-attachments/assets/6b1cea66-c59f-46be-84a9-dad0244af4ce" />
 
 ---
 
