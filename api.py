@@ -1,17 +1,16 @@
 from pydantic import BaseModel
-from typing import Annotated
+from typing import List, Optional
 from fastapi import FastAPI, File, UploadFile
 from rag.retriever import query 
 from rag.loader import load_file
 from rag.chunker import chunk_text
 from rag.embedder import embed_and_store
-from sentiment import analyze_sentiment
 import os
 import tempfile
 from fastapi.middleware.cors import CORSMiddleware
 
 
-app = FastAPI()
+app = FastAPI(title="SmartDoc API", description="Document QA with RAG and Conversational Memory")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,18 +19,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class SentimentRequest(BaseModel):
-    text: str
+class ChatMessage(BaseModel):
+    role: str
+    content: str
 
-@app.post("/sentiment/")
-def sentiment(request: SentimentRequest):
-    result = analyze_sentiment(request.text)
-    return result
 class QuestionRequest(BaseModel):
-    question:str
+    question: str
+    history: Optional[List[ChatMessage]] = []
 
 @app.post("/uploadfile/")
-def upload_file(file : UploadFile):
+def upload_file(file: UploadFile):
     contents = file.file.read()
 
     suffix = os.path.splitext(file.filename)[1]
@@ -47,10 +44,11 @@ def upload_file(file : UploadFile):
     os.remove(tmp_path)
 
     return {"message": f"Document '{file.filename}' ready for questions!"}
-    
 
 @app.post("/userquery/")
-def user_query(request : QuestionRequest):
+def user_query(request: QuestionRequest):
     question = request.question
-    answer = query(question)
+    history_dicts = [{"role": msg.role, "content": msg.content} for msg in request.history] if request.history else []
+    answer = query(question=question, history=history_dicts)
     return {"answer": answer}
+

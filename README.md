@@ -1,28 +1,15 @@
 # SmartDocs
 
-An AI-powered document interaction system that runs **fully locally** — no API costs, no cloud dependencies. Upload a document and interact with it through RAG-powered Q&A, sentiment analysis, and summarization.
+An AI-powered document interaction system that runs **fully locally** — no API costs, no cloud dependencies. Upload a document and interact with it through conversational RAG-powered Q&A (with multi-turn memory) and summarization.
 
 ---
 
 ## Features
 
-- **Ask questions** — retrieval-augmented generation (RAG) grounds every answer strictly in your document. No hallucinations.
-- **Sentiment analysis** — emotion detection on any text using a fine-tuned transformer model.
+- **Ask questions with Conversation Memory** — retrieval-augmented generation (RAG) grounds every answer strictly in your document, with multi-turn memory so the LLM remembers previous messages for context-aware follow-ups.
 - **Summarization** — query-focused summarization for small documents; map-reduce for files larger than 2MB.
 - **REST API** — FastAPI backend with endpoints for file ingestion and querying.
 - **Clean UI** — minimal dark frontend, no framework dependencies.
-
----
-
-## Demo
-
-<img width="1909" height="937" alt="image" src="https://github.com/user-attachments/assets/16a64736-bbe0-4caa-a988-539905e466ce" />
-<img width="309" height="641" alt="image" src="https://github.com/user-attachments/assets/7d610684-4b1e-4815-98d3-ffb82e42db5c" />
-<img width="1619" height="527" alt="image" src="https://github.com/user-attachments/assets/000f1aec-dfa1-467f-9a34-58efb59ef670" />
-<img width="1892" height="558" alt="image" src="https://github.com/user-attachments/assets/6385db61-03a9-4c44-aef5-fab2b923e709" />
-<img width="1583" height="383" alt="image" src="https://github.com/user-attachments/assets/ba3f05a6-ed75-49d7-b60f-db5378a7ae1c" />
-<img width="1594" height="388" alt="image" src="https://github.com/user-attachments/assets/6b1cea66-c59f-46be-84a9-dad0244af4ce" />
-
 
 ---
 
@@ -35,12 +22,13 @@ An AI-powered document interaction system that runs **fully locally** — no API
 4. Each chunk is converted to a vector embedding using `nomic-embed-text`
 5. Embeddings are stored persistently in ChromaDB
 
-### Query phase
-1. User submits a question
-2. Question is embedded using the same model
+### Query phase with Conversational Memory
+1. User submits a question along with prior conversation history
+2. Question is embedded using `nomic-embed-text`
 3. ChromaDB performs cosine similarity search and returns the top 3 most relevant chunks
-4. A grounded prompt is built: `answer ONLY from the context below`
-5. `phi3:mini` generates an answer strictly from retrieved context
+4. A grounded system prompt is built containing the retrieved document chunks
+5. Conversation turns (`user` and `assistant`) are assembled in sequence with the new question
+6. `phi3:mini` generates a context-aware answer strictly grounded in the document
 
 ### Summarization
 - Files **under 2MB** — query-focused summarization: top 8–10 chunks are retrieved and summarized in one pass
@@ -56,14 +44,10 @@ An AI-powered document interaction system that runs **fully locally** — no API
 | Embeddings | `nomic-embed-text` via Ollama |
 | Vector store | ChromaDB (persistent, local) |
 | API | FastAPI + Uvicorn |
-| Sentiment model | `cardiffnlp/twitter-roberta-base-sentiment-latest` |
 | PDF parsing | PyMuPDF (fitz) |
 | Language | Python 3.11+ |
 
-
 ---
-## Work Flow
-<img width="1336" height="1218" alt="image" src="https://github.com/user-attachments/assets/5fd095db-520e-4612-a2cd-1401cce05254" />
 
 ## Getting started
 
@@ -112,37 +96,28 @@ Upload and ingest a document.
 
 **Response:**
 ```json
-{ "message": "Document ready for questions!" }
+{ "message": "Document 'sample.txt' ready for questions!" }
 ```
 
 ---
 
 ### `POST /userquery/`
-Ask a question about the ingested document.
+Ask a question about the ingested document with optional conversation history.
 
 **Request:**
 ```json
-{ "question": "What is this document about?" }
+{
+  "question": "What are its key findings?",
+  "history": [
+    { "role": "user", "content": "What is this document about?" },
+    { "role": "assistant", "content": "This document discusses..." }
+  ]
+}
 ```
 
 **Response:**
 ```json
-{ "answer": "..." }
-```
-
----
-
-### `POST /sentiment/`
-Analyse the emotional tone of any text.
-
-**Request:**
-```json
-{ "text": "I'm so excited about this!" }
-```
-
-**Response:**
-```json
-{ "label": "joy", "score": 0.94 }
+{ "answer": "The key findings include..." }
 ```
 
 ---
